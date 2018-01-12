@@ -759,15 +759,16 @@ void text(char c[], int x, int y) {
 
 void text(PString string, int x, int y) {
     y = height - y;
-    char* c = const_cast<char *>(string.getText().c_str());
+//    char c[80];
+//    strcpy(c, string.getText().c_str());
     pushMatrix();
     glColor3d(fillCol.r, fillCol.g, fillCol.b);
     glRasterPos2d(x, y);
-    for (int i = 0; i < strlen(c); i++) {
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, c[i]);
+//    for (int i = 0; i < strlen(c); i++) {
+    for (int i = 0; i < string.getText().length(); i++) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, string.getText().at(i));
     }
     popMatrix();
-
 }
 
 long millis() {
