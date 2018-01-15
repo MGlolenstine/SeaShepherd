@@ -5,25 +5,59 @@
 #ifndef IGRCA_LEVEL1_H
 #define IGRCA_LEVEL1_H
 
+struct Location{
+    float x;
+    float y;
+    float z;
+};
 
-class Level1 {
-    PVector pos;
-    PVector vel;
+class AntarcticBoat{
+    float x;
+    float y;
+    float z;
+    PImage img;
 public:
-    Level1(){
-        pos = PVector(width/2, height/2);
-        vel.random2D();
-        vel.mult(5);
+    AntarcticBoat(PImage img){
+        x = 0;
+        y = 0;
+        z = 0;
+        this->img = img;
     }
     void show(){
-        ellipse(pos.x, pos.y, 5, 5);
-        if(pos.x > width || pos.x < 0){
-            vel.x = -vel.x;
+        image(img, x, y, 32, 32);
+    }
+
+    Location getPosition(){
+        Location loc;
+        loc.x = x;
+        loc.y = y;
+        loc.z = z;
+        return loc;
+    }
+};
+
+class Antarctic{
+    std::vector<AntarcticBoat> boats;
+public:
+    Antarctic(PImage img){
+        // TODO: Add boats
+        boats.push_back(AntarcticBoat(img));
+    }
+    void show(){
+        for(AntarcticBoat ab : boats){
+            ab.show();
         }
-        if(pos.y > height || pos.y < 0){
-            vel.y = -vel.y;
+    }
+};
+
+class Level1 {
+    Antarctic *ac = nullptr;
+public:
+    void show(){
+        if(ac == nullptr){
+            ac = new Antarctic(loadImage("boats/antarctic.png"));
         }
-        pos.add(vel);
+        ac->show();
     }
 
     void keyPressed(){
@@ -34,6 +68,5 @@ public:
 
     }
 };
-
 
 #endif //IGRCA_LEVEL1_H

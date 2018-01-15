@@ -96,6 +96,8 @@ std::string getPath();
 
 std::string getFolder(std::string fullPath);
 
+std::string sketchDirectory(const char input[]);
+
 bool endsWith(const char string[], const char check[]);
 
 // Classes
@@ -722,11 +724,14 @@ void image(PImage img, int x, int y, int w = -1, int h = -1) {
 }
 
 PImage loadImage(const char url[]) {
-    std::string s = getPath() + "/" + url;
+    std::string tmp = getPath().substr(0, getPath().length()-19);
+    std::string s = tmp + "/" + url;
+    //std::cout<<"Loading image from: "<<s.c_str()<<std::endl;
     boolean loaded = ilLoadImage(s.c_str());
 
     if (!loaded) {
         puts("Not loaded!");
+        std::cout<<ilGetError()<<std::endl;
         std::cout << "Error: " << iluErrorString(ilGetError()) << std::endl;
         return PImage();
     }
@@ -881,6 +886,7 @@ std::string getFolder(std::string fullPath) {
 
 std::string sketchDirectory(const char input[] = "") {
     std::string tmp = path;
+    tmp = tmp.substr(0, tmp.length()-18);
     tmp += input;
     return tmp;
 }

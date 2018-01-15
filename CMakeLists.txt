@@ -3,7 +3,7 @@ project(igrca)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main.cpp P5c.h MainMenu.h Button.h LevelSelector.h Level1.h)
+set(SOURCE_FILES main.cpp P5c.h MainMenu.h Button.h LevelSelector.h Level1.h boats)
 add_executable(igrca ${SOURCE_FILES})
 
 find_package(OpenGL REQUIRED)
