@@ -5,67 +5,108 @@
 #ifndef IGRCA_LEVEL1_H
 #define IGRCA_LEVEL1_H
 
-struct Location{
-    float x;
-    float y;
-    float z;
-};
+#include "VegovecBoat.h"
+#include "IceBerg.h"
 
-class AntarcticBoat{
-    float x;
-    float y;
-    float z;
-    PImage img;
+class Antarctic {
 public:
-    AntarcticBoat(PImage img){
-        x = 0;
-        y = 0;
-        z = 0;
-        this->img = img;
-    }
-    void show(){
-        image(img, x, y, 32, 32);
-    }
-
-    Location getPosition(){
-        Location loc;
-        loc.x = x;
-        loc.y = y;
-        loc.z = z;
-        return loc;
-    }
-};
-
-class Antarctic{
     std::vector<AntarcticBoat> boats;
-public:
-    Antarctic(PImage img){
-        // TODO: Add boats
-        boats.push_back(AntarcticBoat(img));
+    std::vector<IceBerg> icebergs;
+    VegovecBoat boat = VegovecBoat(PImage());
+    explicit Antarctic(int amountOfBoats, int amountOfBergs) {
+        PImage img = loadImage("boats/antarctic.png");
+        for (int i = 0; i < amountOfBoats; i++) {
+            boats.push_back(AntarcticBoat(img));
+        }
+        img = loadImage("boats/iceberg.png");
+        for (int i = 0; i < amountOfBergs; i++) {
+            icebergs.push_back(IceBerg(img));
+        }
+        img = loadImage("boats/ladja_vegovec.png");
+        boat = VegovecBoat(img);
     }
-    void show(){
-        for(AntarcticBoat ab : boats){
+
+    void show() {
+        fill(0);
+        //text("Amount of boats: "s + (int) boats.size(), 0, 10);
+        for (AntarcticBoat ab : boats) {
             ab.show();
         }
+        for(int i = 0; i < icebergs.size(); i++){
+            icebergs.at(i).move();
+            icebergs.at(i).show();
+        }
+        boat.show();
+        fill(0);
+        text(boat.getScore(), 16, 16);
+    }
+
+    void move(const bool flags[]) {
+        boat.move(flags);
+        PVector loc = boat.getLocation();
+        for (int i = 0; i < boats.size(); i++) {
+            boats.at(i).update(loc);
+            boats.at(i).move(boat.getLocation());
+        }
+        for(IceBerg ib : icebergs){
+            if(boat.checkHitBerg(ib)){
+                removeBerg(ib);
+                break;
+            }
+        }
+        for(AntarcticBoat ab : boats){
+            if(boat.checkHitBoat(ab)){
+                removeBoat(ab);
+                break;
+            }
+        }
+    }
+
+    void removeBerg(IceBerg ib){
+        std::vector<IceBerg> tmp;
+        PVector loc1 = ib.getLocation();
+        for(IceBerg lp : icebergs){
+            PVector loc2 = lp.getLocation();
+            if(dist(loc1, loc2)>16) {
+                tmp.push_back(lp);
+            }else{
+            }
+        }
+        icebergs = tmp;
+    }
+
+    void removeBoat(AntarcticBoat ab){
+        std::vector<AntarcticBoat> tmp;
+        PVector loc1 = ab.getLocation();
+        for(AntarcticBoat lp : boats){
+            PVector loc2 = lp.getLocation();
+            if(dist(loc1, loc2)>16) {
+                tmp.push_back(lp);
+            }else{
+            }
+        }
+        boats = tmp;
     }
 };
 
 class Level1 {
+    int amountOfBoats = 10;
+    int amountOfBergs = 5;
     Antarctic *ac = nullptr;
 public:
-    void show(){
-        if(ac == nullptr){
-            ac = new Antarctic(loadImage("boats/antarctic.png"));
+    void show() {
+        if (ac == nullptr) {
+            ac = new Antarctic(amountOfBoats, amountOfBergs);
         }
         ac->show();
     }
 
-    void keyPressed(){
-
+    void keyPressed(const bool flags[]) {
+        ac->move(flags);
     }
 
-    void mousePressed(){
-
+    bool nextLevel(){
+        return ac->boats.size() == 0;
     }
 };
 

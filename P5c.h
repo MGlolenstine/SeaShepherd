@@ -353,7 +353,7 @@ public:
     PString& operator=(std::string tmp){
         text = (std::move(tmp));
     }
-    PString& operator=(PString &tmp){
+    PString& operator=(const PString &tmp){
         text = tmp.text;
     }
     PString& operator=(bool tmp){
@@ -724,9 +724,10 @@ void image(PImage img, int x, int y, int w = -1, int h = -1) {
 }
 
 PImage loadImage(const char url[]) {
-    std::string tmp = getPath().substr(0, getPath().length()-19);
-    std::string s = tmp + "/" + url;
-    //std::cout<<"Loading image from: "<<s.c_str()<<std::endl;
+    //std::string tmp = getPath().substr(0, getPath().length()-19);
+    //std::string s = tmp + "/" + url;
+    std::string s = url;
+    std::cout<<"Loading image from: "<<s.c_str()<<std::endl;
     boolean loaded = ilLoadImage(s.c_str());
 
     if (!loaded) {
@@ -764,13 +765,10 @@ void text(char c[], int x, int y) {
 
 void text(PString string, int x, int y) {
     y = height - y;
-//    char c[80];
-//    strcpy(c, string.getText().c_str());
     pushMatrix();
     glColor3d(fillCol.r, fillCol.g, fillCol.b);
     glRasterPos2d(x, y);
-//    for (int i = 0; i < strlen(c); i++) {
-    for (int i = 0; i < string.getText().length(); i++) {
+    for (unsigned long i = 0; i < string.getText().length(); i++) {
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, string.getText().at(i));
     }
     popMatrix();
@@ -834,6 +832,10 @@ double dist(float a1, float a2, float a3, float a4, float a5 = NULL, float a6 = 
     }
 }
 
+double dist(PVector a, PVector b){
+    // distance in 3d between two PVectors
+    return std::abs(std::sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2) + pow(a.z - b.z, 2)));
+}
 // Coordinate system functions
 
 void translate(int x, int y, int z = 0) {
