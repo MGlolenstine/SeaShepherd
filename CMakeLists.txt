@@ -3,23 +3,24 @@ project(igrca)
 
 set(CMAKE_CXX_STANDARD 11)
 
-#link_libraries("libs")
+#link_libraries("${PROJECT_SOURCE_DIR}/libs/dlls/")
 
 FILE(COPY boats DESTINATION .)
 
 set(SOURCE_FILES main.cpp P5c.h MainMenu.h Button.h LevelSelector.h Level1.h boats Level2.h VegovecBoat.h IceBerg.h AntarcticBoat.h Atol.h SouthSeaBoat.h Level3.h Pirate.h ChinaSeaBoat.h)
 add_executable(igrca ${SOURCE_FILES})
 
+set(GLUT_LIBRARY "C:/MinGW/lib/freeglut.lib")
+set(IL_LIBRARY "C:/MinGW/lib/libIL.a")
+
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
+find_package(DevIL REQUIRED)
 #find_package(IL REQUIRED)
 
-FIND_PATH(IL_INCLUDE_DIRS il.h PATH_SUFFIXES include IL DOC "The path the the directory that contains il.h")
-FIND_LIBRARY(IL_LIBRARIES NAMES IL DEVIL PATH_SUFFIXES lib64 lib lib32 DOC "The file that corresponds to the base il library.")
+#set(IL_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/libs/includes)
+#set(ILU_LIBRARIES ${PROJECT_SOURCE_DIR}/libs/dlls/ILU)
+#set(ILUT_LIBRARIES ${PROJECT_SOURCE_DIR}/libs/dlls/ILUT)
 
-FIND_LIBRARY(ILUT_LIBRARIES NAMES ILUT PATH_SUFFIXES lib64 lib lib32 DOC "The file that corresponds to the il (system?) utility library.")
-FIND_LIBRARY(ILU_LIBRARIES NAMES ILU PATH_SUFFIXES lib64 lib lib32 DOC "The file that corresponds to the il utility library.")
-
-include_directories(${OPENGL_INCLUDE_DIRS}  ${GLUT_INCLUDE_DIRS} ${LIBPNG_INCLUDE_DIRS} ${IL_INCLUDE_DIRS})
-
-target_link_libraries(igrca ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${LIBPNG_LIBRARIES} ${IL_LIBRARIES} ${ILU_LIBRARIES} ${ILUT_LIBRARIES})
+include_directories(${OPENGL_INCLUDE_DIRS}  ${GLUT_INCLUDE_DIRS} ${IL_INCLUDE_DIRS})
+target_link_libraries(igrca ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${IL_LIBRARIES} ${ILU_LIBRARIES} ${ILUT_LIBRARIES})

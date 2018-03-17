@@ -11,6 +11,7 @@
 #pragma weak keyReleased
 #pragma weak mouseClicked
 #pragma weak mouseReleased
+#pragma comment(lib, "glut32.lib")
 
 #ifndef P5C_H
 #define P5C_H
@@ -18,14 +19,13 @@
 const int CLOSE = 1;
 const int P3D = 1;
 
-#include <wait.h>
 #include <chrono>
 #include <GL/freeglut.h>
+#include <GL/freeglut_std.h>
+#include <GL/freeglut_ext.h>
 #include <cmath>
 #include <iostream>
 #include <fstream>
-#include <png.h>
-#include <jpeglib.h>
 #include <cstring>
 #include <utility>
 #include <vector>
@@ -35,6 +35,7 @@ const int P3D = 1;
 #include <sys/param.h>
 #include <libgen.h>
 #include <IL/il.h>
+#include <IL/ilu.h>
 #include <IL/ilut.h>
 #include <sstream>
 #include <algorithm>
@@ -231,53 +232,53 @@ public:
         imgName = 0;
         width = 64;
         height = 64;
-        Color tmppixels[width * height];
-        std::fill_n(tmppixels, width * height, Color(0, 0, 0, 0));
-        for (Color c : tmppixels) {
-            pixels.push_back(c);
-        }
+//        Color tmppixels[width * height];
+//        std::fill_n(tmppixels, width * height, Color(0, 0, 0, 0));
+//        for (Color c : tmppixels) {
+//            pixels.push_back(c);
+//        }
     }
 
     PImage(int width_, int height_) {
         imgName = 0;
         width = width_;
         height = height_;
-        Color tmppixels[width * height];
-        std::fill_n(tmppixels, width * height, Color(0, 0, 0, 0));
-        for (Color c : tmppixels) {
-            pixels.push_back(c);
-        }
+//        Color tmppixels[width * height];
+//        std::fill_n(tmppixels, width * height, Color(0, 0, 0, 0));
+//        for (Color c : tmppixels) {
+//            pixels.push_back(c);
+//        }
     }
 
     PImage(int width_, int height_, int r_, int g_, int b_) {
         imgName = 0;
         width = width_;
         height = height_;
-        Color tmppixels[width * height];
-        std::fill_n(tmppixels, width * height, Color(r_, g_, b_, 255));
-        for (Color c : tmppixels) {
-            pixels.push_back(c);
-        }
+//        Color tmppixels[width * height];
+//        std::fill_n(tmppixels, width * height, Color(r_, g_, b_, 255));
+//        for (Color c : tmppixels) {
+//            pixels.push_back(c);
+//        }
     }
 
     PImage(int width_, int height_, int r_, int g_, int b_, int a_) {
         imgName = 0;
         width = width_;
         height = height_;
-        Color tmppixels[width * height];
-        std::fill_n(tmppixels, width * height, Color(r_, g_, b_, a_));
-        for (Color c : tmppixels) {
-            pixels.push_back(c);
-        }
+//        Color tmppixels[width * height];
+//        std::fill_n(tmppixels, width * height, Color(r_, g_, b_, a_));
+//        for (Color c : tmppixels) {
+//            pixels.push_back(c);
+//        }
     }
 
-    void setPixel(int x, int y, int r, int g = 256, int b = 256, int a = 255) {
-        if (g > 255 || b > 255) {
-            g = r;
-            b = r;
-        }
-        pixels.at(static_cast<unsigned long>(x + y * width)) = Color(r, g, b, a); // NOLINT
-    }
+//    void setPixel(int x, int y, int r, int g = 256, int b = 256, int a = 255) {
+//        if (g > 255 || b > 255) {
+//            g = r;
+//            b = r;
+//        }
+//        pixels.at(static_cast<unsigned long>(x + y * width)) = Color(r, g, b, a); // NOLINT
+//    }
 
     void flip() {
         ilBindImage(imgName);
@@ -290,7 +291,7 @@ public:
     }
 
     void empty(){
-        pixels.clear();
+        //pixels.clear();
         width = 0;
         height = 0;
     }
@@ -318,6 +319,9 @@ public:
         return PString(text+std::to_string(tmp));
     }
     PString operator+(double tmp){
+        return PString(text+std::to_string(tmp));
+    }
+    PString operator+(long tmp){
         return PString(text+std::to_string(tmp));
     }
     PString operator+(const std::string &tmp){
@@ -376,6 +380,10 @@ PString operator"" s(const char* text, std::size_t len) {
     return PString(std::string(text, len));
 }
 
+void println(PString str);
+
+long millis();
+
 // Variables
 int width;
 int height;
@@ -396,7 +404,8 @@ std::string path = ""; // NOLINT
 
 int framerate = 60;
 int timeToWait;
-long currentTime;
+//long long int currentTime;
+std::chrono::milliseconds currentTime;
 const char *title = nullptr;
 Color last; // NOLINT
 
@@ -413,18 +422,16 @@ int main() {
     iluInit();
     ilutInit();
     ilutRenderer(ILUT_OPENGL);
-    path = getPath();
     strokeCol = Color(0, 0, 0, 255);
     fillCol = Color(255, 255, 255, 255);
     lastver = PVector(0, 0, 0);
+    timeToWait = int(float(1000) / framerate);
+    currentTime = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()));
+    srand(static_cast<unsigned int>(time(nullptr)));
     if(setup){
         setup();
     }
     glutMainLoop();
-    timeToWait = int(float(1000) / framerate);
-    currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::system_clock::now().time_since_epoch()).count();
-    srand(static_cast<unsigned int>(currentTime));
 }
 
 // Window related functions
@@ -521,10 +528,8 @@ void display() {
         translated = true;
     }
     while (true) {
-        if (std::chrono::duration_cast<std::chrono::milliseconds>(
-                std::chrono::system_clock::now().time_since_epoch()).count() >= currentTime + timeToWait) {
-            currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
-                    std::chrono::system_clock::now().time_since_epoch()).count();
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() > currentTime.count() + timeToWait) {
+            currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
             glMatrixMode(GL_MODELVIEW);
             if(draw){
                 draw();
@@ -728,7 +733,7 @@ PImage loadImage(const char url[]) {
     //std::string s = tmp + "/" + url;
     std::string s = url;
     std::cout<<"Loading image from: "<<s.c_str()<<std::endl;
-    boolean loaded = ilLoadImage(s.c_str());
+    bool loaded = ilLoadImage(s.c_str());
 
     if (!loaded) {
         puts("Not loaded!");
@@ -806,14 +811,6 @@ float map(float n, float min1, float max1, float min2, float max2) {
 }
 
 float random(int min, int max = 0) {
-    tm localTime{};
-    std::chrono::system_clock::time_point t = std::chrono::system_clock::now();
-    time_t now = std::chrono::system_clock::to_time_t(t);
-    localtime_r(&now, &localTime);
-
-    const std::chrono::duration<double> tse = t.time_since_epoch();
-    std::chrono::seconds::rep milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(tse).count() % 1000;
-    srand(static_cast<unsigned int>(milliseconds + rand() % 100)); // NOLINT
     if (min > max) {
         max = min;
         min = 0;
@@ -852,53 +849,6 @@ void popMatrix() {
 }
 
 // Much appreciated functions
-
-std::string getPath() {
-    std::string final = std::string("");
-    // Windows
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-    int bytes = GetModuleFileName(NULL, pBuf, len);
-    if (bytes == 0)
-        return -1;
-    else
-        return bytes;
-#endif
-    // Linux
-#ifdef __unix__
-    char result[PATH_MAX];
-    ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
-    final = std::string(result, static_cast<unsigned long>((count > 0) ? count : 0));
-#endif
-    return getFolder(final);
-}
-
-std::string getFolder(std::string fullPath) {
-    if (fullPath.length() > 0) {
-        char sep = '/';
-        std::string s = fullPath.substr(1);
-        int length = 0;
-        for (size_t p = 0, q = 0; p != s.npos; p = q) {
-            length = int(s.substr(p + (p != 0), (q = s.find(sep, p + 1)) - p - (p != 0)).length());
-        }
-        std::string final = fullPath.substr(1, fullPath.length() - length);
-        return fullPath.substr(0, fullPath.length() - length);
-    }
-    return fullPath;
-}
-
-std::string sketchDirectory(const char input[] = "") {
-    std::string tmp = path;
-    tmp = tmp.substr(0, tmp.length()-18);
-    tmp += input;
-    return tmp;
-}
-
-std::string dataDirectory(const char input[] = "") {
-    std::string tmp = path;
-    tmp += "data/";
-    tmp.operator+=(input);
-    return tmp;
-}
 
 void print(PString str){
     std::cout<<str.getText();

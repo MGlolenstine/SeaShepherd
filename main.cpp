@@ -50,7 +50,7 @@ void draw() {
         l3.show();
     }else if(currentScene == 4){
         fill(0);
-        text("Cestitke, zmagal si!"s, width/2, height/2);
+        //text("Cestitke, zmagal si!"s, width/2, height/2);
     }
     if(currentScene == 1){
         l1.keyPressed(flag);
