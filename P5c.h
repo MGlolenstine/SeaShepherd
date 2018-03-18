@@ -45,10 +45,15 @@ const int P3D = 1;
 
 
 void setup() __attribute__((weak));
+
 void draw() __attribute__((weak));
+
 void mousePressed() __attribute__((weak));
+
 void mouseReleased() __attribute__((weak));
+
 void keyPressed() __attribute__((weak));
+
 void keyReleased() __attribute__((weak));
 
 void KeyPressed();
@@ -101,6 +106,9 @@ std::string sketchDirectory(const char input[]);
 
 bool endsWith(const char string[], const char check[]);
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "OCDFAInspection"
+
 // Classes
 class Color {
 public:
@@ -137,6 +145,8 @@ public:
         a = a_;
     }
 };
+
+#pragma clang diagnostic pop
 
 class PVector {
 public:
@@ -209,14 +219,15 @@ public:
         z = z / a;
     }
 
-    void limit(float max){
-        if(magSq() > max*max) {
+    void limit(float max) {
+        if (magSq() > max * max) {
             normalize();
             mult(max);
         }
     }
-    float magSq(){
-        return (x*x+y*y+z*z);
+
+    float magSq() {
+        return (x * x + y * y + z * z);
     }
 };
 
@@ -290,93 +301,111 @@ public:
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, IL_RGBA, GL_UNSIGNED_BYTE, ilGetData());
     }
 
-    void empty(){
+    void empty() {
         //pixels.clear();
         width = 0;
         height = 0;
     }
 };
 
-class PString{
+class PString {
     std::string text;
 public:
     PString() = default;
 
-    explicit PString(std::string s){
+    explicit PString(std::string s) {
         text = std::move(s);
     }
 
-    PString operator+(const char* tmp){
-        return PString(text+std::string(tmp));
+    PString operator+(const char *tmp) {
+        return PString(text + std::string(tmp));
     }
-    PString operator+(int tmp){
-        return PString(text+std::to_string(tmp));
+
+    PString operator+(int tmp) {
+        return PString(text + std::to_string(tmp));
     }
-    PString operator+(float tmp){
-        return PString(text+std::to_string(tmp));
+
+    PString operator+(float tmp) {
+        return PString(text + std::to_string(tmp));
     }
-    PString operator+(char tmp){
-        return PString(text+std::to_string(tmp));
+
+    PString operator+(char tmp) {
+        return PString(text + std::to_string(tmp));
     }
-    PString operator+(double tmp){
-        return PString(text+std::to_string(tmp));
+
+    PString operator+(double tmp) {
+        return PString(text + std::to_string(tmp));
     }
-    PString operator+(long tmp){
-        return PString(text+std::to_string(tmp));
+
+    PString operator+(long tmp) {
+        return PString(text + std::to_string(tmp));
     }
-    PString operator+(const std::string &tmp){
-        return PString(text+tmp);
+
+    PString operator+(const std::string &tmp) {
+        return PString(text + tmp);
     }
-    PString operator+(PString &tmp){
-        return PString(text+tmp.text);
+
+    PString operator+(PString &tmp) {
+        return PString(text + tmp.text);
     }
-    PString operator+(bool tmp){
+
+    PString operator+(bool tmp) {
         std::string str;
-        if(tmp){
+        if (tmp) {
             str = "True";
-        }else{
+        } else {
             str = "False";
         }
-        return PString(text+str);
+        return PString(text + str);
     }
-    PString& operator=(const char* tmp){
+
+    PString &operator=(const char *tmp) {
         text = (std::string(tmp));
     }
-    PString& operator=(int tmp){
+
+    PString &operator=(int tmp) {
         text = (std::to_string(tmp));
     }
-    PString& operator=(float tmp){
+
+    PString &operator=(float tmp) {
         text = (std::to_string(tmp));
     }
-    PString& operator=(char tmp){
+
+    PString &operator=(char tmp) {
         text = (std::to_string(tmp));
     }
-    PString& operator=(double tmp){
+
+    PString &operator=(double tmp) {
         text = (std::to_string(tmp));
     }
-    PString& operator=(std::string tmp){
+
+    PString &operator=(std::string tmp) {
         text = (std::move(tmp));
     }
-    PString& operator=(const PString &tmp){
+
+    PString &operator=(const PString &tmp) {
         text = tmp.text;
     }
-    PString& operator=(bool tmp){
-        if(tmp){
+
+    PString &operator=(bool tmp) {
+        if (tmp) {
             text = ("True");
-        }else{
+        } else {
             text = ("False");
         }
     }
-    std::string getText(){
+
+    std::string getText() {
         return text;
     }
+
 private:
-    void pushBack(const std::string &s){
-        text+=s;
+    void pushBack(const std::string &s) {
+        text += s;
     }
 };
 
-PString operator"" s(const char* text, std::size_t len) {
+PString operator "" s(const char *text, std::size_t len) {
     return PString(std::string(text, len));
 }
 
@@ -426,9 +455,10 @@ int main() {
     fillCol = Color(255, 255, 255, 255);
     lastver = PVector(0, 0, 0);
     timeToWait = int(float(1000) / framerate);
-    currentTime = (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()));
+    currentTime = (std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()));
     srand(static_cast<unsigned int>(time(nullptr)));
-    if(setup){
+    if (setup) {
         setup();
     }
     glutMainLoop();
@@ -450,7 +480,7 @@ void size(int w_, int h_, int mode = -1) {
     } else {
         window = glutCreateWindow(strdup(title));
     }
-    if(mode == 1){
+    if (mode == 1) {
         glMatrixMode(GL_MODELVIEW);
     }
     glutReshapeFunc(handleResize);
@@ -467,11 +497,11 @@ void handleMousePress(int button, int state, int x, int y) {
     mouseY = y;
     mouseButton = button;
     if (state == GLUT_DOWN) {
-        if(mousePressed){
+        if (mousePressed) {
             mousePressed();
         }
     } else {
-        if(mouseReleased){
+        if (mouseReleased) {
             mouseReleased();
         }
     }
@@ -484,14 +514,14 @@ void handleMousePos(int x, int y) {
 
 void handleKeypress(unsigned char input, int x, int y) {
     key = input;
-    if(keyPressed){
+    if (keyPressed) {
         keyPressed();
     }
 }
 
 void handleKeyrelease(unsigned char input, int x, int y) {
     key = input;
-    if(keyReleased){
+    if (keyReleased) {
         keyReleased();
     }
 }
@@ -528,10 +558,12 @@ void display() {
         translated = true;
     }
     while (true) {
-        if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() > currentTime.count() + timeToWait) {
-            currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::system_clock::now().time_since_epoch()).count() > currentTime.count() + timeToWait) {
+            currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
+                    std::chrono::system_clock::now().time_since_epoch());
             glMatrixMode(GL_MODELVIEW);
-            if(draw){
+            if (draw) {
                 draw();
             }
             glFlush();
@@ -577,7 +609,7 @@ void vertex(float x, float y, float z = 0) {
     if (counterV == 1) {
         lastver = PVector(x, y, z);
     }
-    glColor3f((float)fillCol.r/255, (float)fillCol.g/255, (float)fillCol.b/255);
+    glColor3f((float) fillCol.r / 255, (float) fillCol.g / 255, (float) fillCol.b / 255);
     glVertex3d(x, y, z);
 }
 
@@ -690,7 +722,7 @@ void fill(int r, int g = 256, int b = 256, int a = 255) {
     fillCol = Color(r, g, b, a);
 }
 
-void fill(Color color){
+void fill(Color color) {
     fillCol = color;
 }
 
@@ -732,12 +764,12 @@ PImage loadImage(const char url[]) {
     //std::string tmp = getPath().substr(0, getPath().length()-19);
     //std::string s = tmp + "/" + url;
     std::string s = url;
-    std::cout<<"Loading image from: "<<s.c_str()<<std::endl;
+    std::cout << "Loading image from: " << s.c_str() << std::endl;
     bool loaded = ilLoadImage(s.c_str());
 
     if (!loaded) {
         puts("Not loaded!");
-        std::cout<<ilGetError()<<std::endl;
+        std::cout << ilGetError() << std::endl;
         std::cout << "Error: " << iluErrorString(ilGetError()) << std::endl;
         return PImage();
     }
@@ -762,7 +794,7 @@ void text(char c[], int x, int y) {
     glColor3d(fillCol.r, fillCol.g, fillCol.b);
     glRasterPos2d(x, y);
     for (int i = 0; i < strlen(c); i++) {
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, c[i]);
+        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c[i]);
     }
     popMatrix();
 
@@ -774,9 +806,13 @@ void text(PString string, int x, int y) {
     glColor3d(fillCol.r, fillCol.g, fillCol.b);
     glRasterPos2d(x, y);
     for (unsigned long i = 0; i < string.getText().length(); i++) {
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, string.getText().at(i));
+        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, string.getText().at(i));
     }
     popMatrix();
+}
+
+int textWidth(PString string) {
+    return static_cast<int>(string.getText().length() * 9);
 }
 
 long millis() {
@@ -791,9 +827,9 @@ void noStroke() {
     strokeCol.a = 0;
 }
 
-PImage loadPixels(){
+PImage loadPixels() {
     PImage img = PImage(width, height);
-    auto *pixmap=(GLubyte *)malloc((size_t)width * height * 4);
+    auto *pixmap = (GLubyte *) malloc((size_t) width * height * 4);
     GLuint textureName;
     glReadBuffer(GL_FRONT_AND_BACK);
     glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixmap);
@@ -819,17 +855,18 @@ float random(int min, int max = 0) {
     return random;
 }
 
-double dist(float a1, float a2, float a3, float a4, float a5 = NULL, float a6 = NULL) {
-    if (a5 == NULL || a6 == NULL) {
-        // distance in 2d
-        return std::sqrt(pow(a3 - a1, 2) + pow(a4 - a2, 2));
-    } else {
-        //distance in 3d
-        return std::sqrt(pow(a1 - a4, 2) + pow(a2 - a5, 2) + pow(a3 - a6, 2));
-    }
+double dist(float a1, float a2, float a3, float a4) {
+    // distance in 2d
+    return std::sqrt(pow(a3 - a1, 2) + pow(a4 - a2, 2));
 }
 
-double dist(PVector a, PVector b){
+double dist(float a1, float a2, float a3, float a4, float a5, float a6) {
+    //distance in 3d
+    return std::sqrt(pow(a1 - a4, 2) + pow(a2 - a5, 2) + pow(a3 - a6, 2));
+}
+
+
+double dist(PVector a, PVector b) {
     // distance in 3d between two PVectors
     return std::abs(std::sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2) + pow(a.z - b.z, 2)));
 }
@@ -850,11 +887,12 @@ void popMatrix() {
 
 // Much appreciated functions
 
-void print(PString str){
-    std::cout<<str.getText();
+void print(PString str) {
+    std::cout << str.getText();
 }
-void println(PString str){
-    std::cout<<str.getText()<<std::endl;
+
+void println(PString str) {
+    std::cout << str.getText() << std::endl;
 }
 // Re-declaration of event functions
 

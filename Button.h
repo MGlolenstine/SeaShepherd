@@ -13,39 +13,56 @@ class Button {
     int height;
     PString displayText;
     int action;
+    bool centered;
 public:
 
-    Button(int x, int y, int width, int height, PString displayText, int action){
+    Button(int x, int y, int width, int height, PString displayText, int action) {
         this->x = x;
         this->y = y;
         this->width = width;
         this->height = height;
         this->displayText = displayText;
         this->action = action;
+        this->centered = false;
     }
 
-    void show(){
+    Button(int x, int y, PString displayText, int action, bool center) {
+        this->x = x;
+        this->y = y;
+        this->width = textWidth(displayText) + 40;
+        if (center) {
+            this->x = x - (textWidth(displayText) + 40) / 2;
+        }
+        this->height = 20;
+        this->displayText = displayText;
+        this->action = action;
+        this->centered = center;
+    }
+
+    void show() {
         fill(255);
         rect(x, y, width, height);
         fill(0);
-        text(displayText, x, y+height/2);
+        if(centered) {
+            text(displayText, x + 20, y + height / 2 + 2);
+        }
     }
 
-    PVector getPosition(){
+    PVector getPosition() {
         return PVector(x, y);
     }
 
-    int getWidth(){
+    int getWidth() {
         return width;
     }
 
-    int getHeight(){
+    int getHeight() {
         return height;
     }
 
-    int pressed(int x, int y){
-        if(x > this->x && x < this->x+width){
-            if(y > this->y && y < this->y+height){
+    int pressed(int x, int y) {
+        if (x > this->x && x < this->x + width) {
+            if (y > this->y && y < this->y + height) {
                 return action;
             }
         }

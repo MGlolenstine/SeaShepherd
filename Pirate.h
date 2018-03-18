@@ -7,12 +7,12 @@
 
 
 class Pirate {
-    PVector pos;
-    PVector dir;
-    PImage img;
+    PVector pos{};
+    PVector dir{};
+    PImage img{};
     bool shown = false;
 public:
-    Pirate(PImage img) {
+    explicit Pirate(PImage img) {
         pos.x = random(0, width);
         pos.y = random(0, height);
         pos.z = 0;
@@ -50,7 +50,7 @@ public:
         dir.sub(pos);
         dir.normalize();
         //300 pixlov stran = stop
-        dir.mult(2*25/dist(pos, vb));
+        dir.mult(static_cast<float>(2 * 25 / dist(pos, vb)));
         if(pos.x > width-16 || pos.x < 16){
             dir.x = 0;
         }

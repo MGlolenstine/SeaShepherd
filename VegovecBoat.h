@@ -11,6 +11,7 @@
 #include "SouthSeaBoat.h"
 #include "Pirate.h"
 #include "ChinaSeaBoat.h"
+#include "QuestionBox.h"
 
 class VegovecBoat {
     float x;

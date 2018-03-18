@@ -11,26 +11,25 @@
 
 class LevelSelector {
     std::vector<Button> buttons;
-    int buttonWidth = 140;
 public:
 
-    LevelSelector(){
-        buttons.push_back(Button(width/2-buttonWidth/2, height/10*6, buttonWidth, 25, "Select to play from Level 1"s, 1));
-        buttons.push_back(Button(width/2-buttonWidth/2, height/10*7, buttonWidth, 25, "Level 2"s, 2));
-        buttons.push_back(Button(width/2-buttonWidth/2, height/10*8, buttonWidth, 25, "Level 3"s, 3));
+    LevelSelector() {
+        buttons.emplace_back(width / 2, height / 10 * 6, "Level 1"s, 1, true);
+        buttons.emplace_back(width / 2, height / 10 * 7, "Level 2"s, 2, true);
+        buttons.emplace_back(width / 2, height / 10 * 8, "Level 3"s, 3, true);
     }
 
-    void show(){
+    void show() {
         //text("Select to play from level 1"s, width/2-75/2, height/10*6-20);
-        for(Button b : buttons){
+        for (Button b : buttons) {
             b.show();
         }
     }
 
-    int pressed(int x, int y){
-        for(Button b : buttons){
+    int pressed(int x, int y) {
+        for (Button b : buttons) {
             int action = b.pressed(x, y);
-            if(action != -2){
+            if (action != -2) {
                 return action;
             }
         }
