@@ -8,7 +8,7 @@
 #include "Scoreboard.h"
 
 class TextInput {
-    PString string = ""s;
+    PString string;
     PVector pos;
     PVector size;
     Button submit;
@@ -22,8 +22,9 @@ public:
     TextInput(int x, int y, int w, int h) {
         pos = PVector(x, y);
         size = PVector(w, h);
-        lengthDisplayed = (size.x - 2)/textWidth(PString("1"));
+        lengthDisplayed = (size.x - 2)/textWidth("1"s);
         submit = Button(pos.x+size.x+15, y, textWidth("Submit"s), 20, "Submit"s, 0);
+
         sb = Scoreboard("scores.txt"s);
         sb.getResults();
     }

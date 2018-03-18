@@ -6,8 +6,6 @@
 #include "Level3.h"
 #include "TextInput.h"
 
-using namespace std;
-
 /*
    -1 - main menu
     0 - Level Selection
@@ -46,8 +44,8 @@ void setup() {
     bg[3] = loadImage("boats/southsea.jpg");
     bg[4] = loadImage("boats/chinasea.jpg");
     bg[5] = loadImage("boats/vegova_logo.png");
-    win = Button(width/2, height-25, "Cestitke, zmagal si"s, -1, true);
-    lose = Button(width/2, height-25, "Vec srece prihodnjic"s, -1, true);
+    win = Button(width/2, height-25, PString("Cestitke, zmagal si"s), -1, true);
+    lose = Button(width/2, height-25, PString("Vec srece prihodnjic"s), -1, true);
     nameInput = TextInput(width/3, 15, width/3, 20);
 }
 
