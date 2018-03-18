@@ -24,8 +24,9 @@ public:
             image(img, int(pos.x - 16), int(pos.y - 16), 32, 32);
         }else{
             if(random(0, 1000) < 3){
+                //TODO: Add multiple frames radar
                 image(img, int(pos.x - 16), int(pos.y - 16), 32, 32);
-                fill(0, 255, 0, 50);
+                fill(255, 0, 0, 50);
                 stroke(0);
                 ellipse(pos.x, pos.y, 100, 100);
                 ellipse(pos.x, pos.y, 75, 75);

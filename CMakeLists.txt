@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 FILE(COPY boats DESTINATION .)
 
-set(SOURCE_FILES main.cpp P5c.h MainMenu.h Button.h LevelSelector.h Level1.h boats Level2.h VegovecBoat.h IceBerg.h AntarcticBoat.h Atol.h SouthSeaBoat.h Level3.h Pirate.h ChinaSeaBoat.h QuestionBox.h)
+set(SOURCE_FILES main.cpp P5c.h MainMenu.h Button.h LevelSelector.h Level1.h boats Level2.h VegovecBoat.h IceBerg.h AntarcticBoat.h Atol.h SouthSeaBoat.h Level3.h Pirate.h ChinaSeaBoat.h QuestionBox.h TextInput.h Scoreboard.h)
 add_executable(igrca ${SOURCE_FILES})
 
 find_package(OpenGL REQUIRED)

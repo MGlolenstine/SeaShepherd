@@ -4,6 +4,8 @@
 #include "Level1.h"
 #include "Level2.h"
 #include "Level3.h"
+#include "TextInput.h"
+#include "Scoreboard.h"
 
 using namespace std;
 
@@ -13,8 +15,10 @@ using namespace std;
     1 - Level 1
     2 - Level 2
     3 - Level 3
+    4 - EndGame screen - WIN
+    5 - EndGame screen - LOSE
 */
-int currentScene = -1;
+int currentScene = 4;
 
 bool flag[4];
 
@@ -24,6 +28,10 @@ Level1 l1;
 Level2 l2;
 Level3 l3;
 PImage bg;
+Button win;
+Button lose;
+TextInput nameInput;
+Scoreboard sb("scores.txt"s);
 
 void setup() {
     name("Sea Sheperd");
@@ -32,6 +40,10 @@ void setup() {
     ls = LevelSelector();
     background(51);
     bg = loadImage("boats/vegova_logo.png");
+    win = Button(width/2, height-25, "Cestitke, zmagal si"s, -1, true);
+    lose = Button(width/2, height/2, "Vec srece prihodnjic"s, -1, true);
+    nameInput = TextInput(width/3, 15, width/3, 20);
+    sb.getResults();
 }
 
 void draw() {
@@ -49,23 +61,39 @@ void draw() {
     }else if(currentScene == 3){
         l3.show();
     }else if(currentScene == 4){
-        fill(0);
-        //text("Cestitke, zmagal si!"s, width/2, height/2);
+        nameInput.show();
+        sb.show();
+        win.show();
+    }else if(currentScene == 5){
+        lose.show();
     }
     if(currentScene == 1){
         l1.keyPressed(flag);
+        if(l1.dead()){
+            currentScene = 5;
+        }
         if(l1.nextLevel()){
             currentScene++;
+            l1 = Level1();
         }
     }else if(currentScene == 2){
         l2.keyPressed(flag);
+        if(l2.dead()){
+            currentScene = 5;
+        }
         if(l2.nextLevel()){
             currentScene++;
+            l2 = Level2();
         }
     }else if(currentScene == 3){
         l3.keyPressed(flag);
+        if(l3.dead()){
+            currentScene = 5;
+        }
         if(l3.nextLevel()){
             currentScene++;
+            l3 = Level3();
+            sb.getResults();
         }
     }
 }
@@ -74,11 +102,9 @@ void mousePressed() {
     if(currentScene == -1){
         int action = mm.pressed(mouseX, mouseY);
         if(action == 0){
-            //println("Going to level selector!"s);
             currentScene = 0;
         }
         if(action == 1){
-            //println("Going to level 1!"s);
             currentScene = 1;
         }
     }else if(currentScene == 0){
@@ -90,10 +116,23 @@ void mousePressed() {
         }else if(action == 3){
             currentScene = 3;
         }
+    }else if(currentScene == 3){
+        l3.mousePressed(mouseX, mouseY);
+    }else if(currentScene == 4){
+        if(win.pressed(mouseX, mouseY) == -1){
+            currentScene = 0;
+        }
+    }else if(currentScene == 5){
+        if(lose.pressed(mouseX, mouseY) == -1){
+            currentScene = 0;
+        }
     }
 }
 
 void keyPressed(){
+    if(currentScene == 4){
+        nameInput.keyTyped(key);
+    }
     if(key == 'w'){
         flag[0] = true;
     }else if(key == 'a'){
@@ -104,7 +143,6 @@ void keyPressed(){
         flag[3] = true;
     }
 }
-
 
 void keyReleased(){
     if(key == 'w'){

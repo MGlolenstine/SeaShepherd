@@ -87,6 +87,10 @@ public:
         }
         boats = tmp;
     }
+
+    bool dead(){
+        return boat.getHealth()<=0;
+    }
 };
 
 class Level1 {
@@ -106,7 +110,11 @@ public:
     }
 
     bool nextLevel(){
-        return ac->boats.size() == 0;
+        return ac->boats.empty();
+    }
+
+    bool dead(){
+        return ac->dead();
     }
 };
 

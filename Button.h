@@ -15,6 +15,7 @@ class Button {
     int action;
     bool centered;
 public:
+    Button(){}
 
     Button(int x, int y, int width, int height, PString displayText, int action) {
         this->x = x;
@@ -45,6 +46,8 @@ public:
         fill(0);
         if(centered) {
             text(displayText, x + 20, y + height / 2 + 2);
+        }else{
+            text(displayText, x, y);
         }
     }
 

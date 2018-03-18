@@ -30,14 +30,18 @@ public:
     void show() {
         fill(0);
         for (auto &cb : boats) {
-            cb.update(boat.getLocation());
+            if(!boat.question) {
+                cb.update(boat.getLocation());
+                cb.move(boat.getLocation());
+            }
             cb.show();
-            cb.move(boat.getLocation());
         }
         for (auto &pirate : pirates) {
-            pirate.update(boat.getLocation());
+            if(!boat.question) {
+                pirate.update(boat.getLocation());
+                pirate.move(boat.getLocation());
+            }
             pirate.show();
-            pirate.move(boat.getLocation());
         }
         boat.show();
         fill(0);
@@ -84,27 +88,43 @@ public:
         }
         boats = tmp;
     }
+
+    bool dead(){
+        return boat.getHealth()<=0;
+    }
+
+    void mousePressed(int mouseX, int mouseY){
+        boat.mousePressed(mouseX, mouseY);
+    }
 };
 
 class Level3 {
     int amountOfBoats = 15;
     int amountOfBergs = 15;
-    ChinaSea *ac = nullptr;
+    ChinaSea *cs = nullptr;
 public:
     void show() {
         //println("Showing boats"s);
-        if (ac == nullptr) {
-            ac = new ChinaSea(amountOfBoats, amountOfBergs);
+        if (cs == nullptr) {
+            cs = new ChinaSea(amountOfBoats, amountOfBergs);
         }
-        ac->show();
+        cs->show();
     }
 
     void keyPressed(const bool flags[]) {
-        ac->move(flags);
+        cs->move(flags);
+    }
+
+    void mousePressed(int mouseX, int mouseY){
+        cs->mousePressed(mouseX, mouseY);
     }
 
     bool nextLevel(){
-        return ac->boats.size() == 0;
+        return cs->boats.empty();
+    }
+
+    bool dead(){
+        return cs->dead();
     }
 };
 

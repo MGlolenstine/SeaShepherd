@@ -43,6 +43,7 @@ const int P3D = 1;
 
 // Functions
 
+//TODO: Fix text coloring - only 0 or 255 atm
 
 void setup() __attribute__((weak));
 
@@ -105,6 +106,12 @@ std::string getFolder(std::string fullPath);
 std::string sketchDirectory(const char input[]);
 
 bool endsWith(const char string[], const char check[]);
+
+class PString;
+
+void println(PString str);
+
+PString operator "" s(const char *text, std::size_t len);
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCDFAInspection"
@@ -243,53 +250,25 @@ public:
         imgName = 0;
         width = 64;
         height = 64;
-//        Color tmppixels[width * height];
-//        std::fill_n(tmppixels, width * height, Color(0, 0, 0, 0));
-//        for (Color c : tmppixels) {
-//            pixels.push_back(c);
-//        }
     }
 
     PImage(int width_, int height_) {
         imgName = 0;
         width = width_;
         height = height_;
-//        Color tmppixels[width * height];
-//        std::fill_n(tmppixels, width * height, Color(0, 0, 0, 0));
-//        for (Color c : tmppixels) {
-//            pixels.push_back(c);
-//        }
     }
 
     PImage(int width_, int height_, int r_, int g_, int b_) {
         imgName = 0;
         width = width_;
         height = height_;
-//        Color tmppixels[width * height];
-//        std::fill_n(tmppixels, width * height, Color(r_, g_, b_, 255));
-//        for (Color c : tmppixels) {
-//            pixels.push_back(c);
-//        }
     }
 
     PImage(int width_, int height_, int r_, int g_, int b_, int a_) {
         imgName = 0;
         width = width_;
         height = height_;
-//        Color tmppixels[width * height];
-//        std::fill_n(tmppixels, width * height, Color(r_, g_, b_, a_));
-//        for (Color c : tmppixels) {
-//            pixels.push_back(c);
-//        }
     }
-
-//    void setPixel(int x, int y, int r, int g = 256, int b = 256, int a = 255) {
-//        if (g > 255 || b > 255) {
-//            g = r;
-//            b = r;
-//        }
-//        pixels.at(static_cast<unsigned long>(x + y * width)) = Color(r, g, b, a); // NOLINT
-//    }
 
     void flip() {
         ilBindImage(imgName);
@@ -330,7 +309,10 @@ public:
     }
 
     PString operator+(char tmp) {
-        return PString(text + std::to_string(tmp));
+        std::ostringstream os;
+        os << tmp;
+        std::string str = os.str();
+        return PString(text + str);
     }
 
     PString operator+(double tmp) {
@@ -372,7 +354,11 @@ public:
     }
 
     PString &operator=(char tmp) {
-        text = (std::to_string(tmp));
+        std::ostringstream os;
+        os << tmp;
+        std::string str = os.str();
+        text = str;
+        //text = (std::to_string(tmp));
     }
 
     PString &operator=(double tmp) {
@@ -399,6 +385,29 @@ public:
         return text;
     }
 
+    PString substr(int beginIndex, int length){
+        return PString(text.substr(beginIndex, length));
+    }
+    int length(){
+        return text.length();
+    }
+
+    std::vector<PString> split(char regex){
+        std::vector<PString> vps;
+        std::string tmp = text;
+        int prevIndex = 0;
+        for(int i = 0; i < tmp.length(); i++){
+            if(tmp.at(i) == regex){
+                std::string news = tmp.substr(prevIndex, i-prevIndex);
+                vps.emplace_back(news);
+                prevIndex = i+1;
+            }
+        }
+        std::string news = tmp.substr(prevIndex, tmp.length()-prevIndex);
+        vps.emplace_back(news);
+        return vps;
+    }
+
 private:
     void pushBack(const std::string &s) {
         text += s;
@@ -417,7 +426,7 @@ long millis();
 int width;
 int height;
 int window;
-int key;
+char key;
 int keyCode;
 int mouseX;
 int mouseY;
@@ -513,7 +522,8 @@ void handleMousePos(int x, int y) {
 }
 
 void handleKeypress(unsigned char input, int x, int y) {
-    key = input;
+    key = (char)input;
+    keyCode = input;
     if (keyPressed) {
         keyPressed();
     }
@@ -521,6 +531,7 @@ void handleKeypress(unsigned char input, int x, int y) {
 
 void handleKeyrelease(unsigned char input, int x, int y) {
     key = input;
+    keyCode = input;
     if (keyReleased) {
         keyReleased();
     }
@@ -761,10 +772,7 @@ void image(PImage img, int x, int y, int w = -1, int h = -1) {
 }
 
 PImage loadImage(const char url[]) {
-    //std::string tmp = getPath().substr(0, getPath().length()-19);
-    //std::string s = tmp + "/" + url;
     std::string s = url;
-    std::cout << "Loading image from: " << s.c_str() << std::endl;
     bool loaded = ilLoadImage(s.c_str());
 
     if (!loaded) {

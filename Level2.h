@@ -9,83 +9,6 @@
 #include "SouthSeaBoat.h"
 #include "VegovecBoat.h"
 
-//class VegovecBoat {
-//    float x;
-//    float y;
-//    float z;
-//    float mult;
-//    int score = 0;
-//    PImage img;
-//public:
-//    VegovecBoat(PImage img) {
-//        x = width / 2;
-//        y = height / 2;
-//        z = 0;
-//        mult = 1;
-//        this->img = img;
-//    }
-//
-//    void show() {
-//        image(img, x - 16, y - 16, 32, 32);
-//    }
-//
-//    PVector getLocation() {
-//        PVector loc;
-//        loc.x = x;
-//        loc.y = y;
-//        loc.z = z;
-//        return loc;
-//    }
-//
-//    void move(const bool flags[]) {
-//        if (flags[0]) {
-//            y -= 5*mult;
-//        }
-//        if (flags[1]) {
-//            x -= 5*mult;
-//        }
-//        if (flags[2]) {
-//            y += 5*mult;
-//        }
-//        if (flags[3]) {
-//            x += 5*mult;
-//        }
-//        if(x > width){
-//            x-=width;
-//        }
-//        if(x < 0){
-//            x+=width;
-//        }
-//        if(y > height){
-//            y-=height;
-//        }
-//        if(y < 0){
-//            y+=height;
-//        }
-//    }
-//
-//    bool checkHitBerg(Atol ib){
-//        if(dist(ib.getLocation(), getLocation())< 32){
-//            mult*=0.8;
-//            return true;
-//        }
-//        return false;
-//    }
-//
-//    bool checkHitBoat(SouthSeaBoat ab){
-//        if(dist(ab.getLocation(), getLocation())< 32){
-//            mult*=1.05f;
-//            score++;
-//            return true;
-//        }
-//        return false;
-//    }
-//
-//    PString getScore(){
-//        return ""s+score;
-//    }
-//};
-
 class SouthSea {
 public:
     std::vector<SouthSeaBoat> boats;
@@ -106,10 +29,7 @@ public:
 
     void show() {
         fill(0);
-        //text("Amount of boats: "s + (int) boats.size(), 0, 20);
-        //println("Amount of boats: "s+(int) boats.size());
         for (auto &ab : boats) {
-            //println("Drawing boat at "s+ab.getLocation().x+", "+ab.getLocation().y);
             ab.show();
         }
         for (auto &atol : atols) {
@@ -164,27 +84,35 @@ public:
         }
         boats = tmp;
     }
+
+    bool dead(){
+        return boat.getHealth()<=0;
+    }
 };
 
 class Level2 {
     int amountOfBoats = 15;
     int amountOfBergs = 15;
-    SouthSea *ac = nullptr;
+    SouthSea *ss = nullptr;
 public:
     void show() {
         //println("Showing boats"s);
-        if (ac == nullptr) {
-            ac = new SouthSea(amountOfBoats, amountOfBergs);
+        if (ss == nullptr) {
+            ss = new SouthSea(amountOfBoats, amountOfBergs);
         }
-        ac->show();
+        ss->show();
     }
 
     void keyPressed(const bool flags[]) {
-        ac->move(flags);
+        ss->move(flags);
     }
 
     bool nextLevel(){
-        return ac->boats.size() == 0;
+        return ss->boats.empty();
+    }
+
+    bool dead(){
+        return ss->dead();
     }
 };
 

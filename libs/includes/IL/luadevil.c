@@ -377,7 +377,6 @@ int main (int argc, char **argv) {
   struct Smain s;
   lua_State *L = lua_open();  /* create state */
   printf("DevIL embedded lua interpreter\n");
-//@TODO: Where the heck is this defined?
   //Devil_Init(L);
   if (L == NULL) {
     l_message(argv[0], "cannot create state: not enough memory");
