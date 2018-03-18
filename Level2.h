@@ -88,6 +88,10 @@ public:
     bool dead(){
         return boat.getHealth()<=0;
     }
+
+    int getPoints() {
+        return stoi(boat.getScore().getText());
+    }
 };
 
 class Level2 {
@@ -113,6 +117,10 @@ public:
 
     bool dead(){
         return ss->dead();
+    }
+
+    int getPoints() {
+        ss->getPoints();
     }
 };
 

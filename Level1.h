@@ -13,6 +13,7 @@ public:
     std::vector<AntarcticBoat> boats;
     std::vector<IceBerg> icebergs;
     VegovecBoat boat = VegovecBoat(PImage());
+
     explicit Antarctic(int amountOfBoats, int amountOfBergs) {
         PImage img = loadImage("boats/antarctic.png");
         for (int i = 0; i < amountOfBoats; i++) {
@@ -32,7 +33,7 @@ public:
         for (AntarcticBoat ab : boats) {
             ab.show();
         }
-        for(int i = 0; i < icebergs.size(); i++){
+        for (int i = 0; i < icebergs.size(); i++) {
             icebergs.at(i).move();
             icebergs.at(i).show();
         }
@@ -48,48 +49,52 @@ public:
             boats.at(i).update(loc);
             boats.at(i).move(boat.getLocation());
         }
-        for(IceBerg ib : icebergs){
-            if(boat.checkHitBerg(ib)){
+        for (IceBerg ib : icebergs) {
+            if (boat.checkHitBerg(ib)) {
                 removeBerg(ib);
                 break;
             }
         }
-        for(AntarcticBoat ab : boats){
-            if(boat.checkHitBoat(ab)){
+        for (AntarcticBoat ab : boats) {
+            if (boat.checkHitBoat(ab)) {
                 removeBoat(ab);
                 break;
             }
         }
     }
 
-    void removeBerg(IceBerg ib){
+    void removeBerg(IceBerg ib) {
         std::vector<IceBerg> tmp;
         PVector loc1 = ib.getLocation();
-        for(IceBerg lp : icebergs){
+        for (IceBerg lp : icebergs) {
             PVector loc2 = lp.getLocation();
-            if(dist(loc1, loc2)>16) {
+            if (dist(loc1, loc2) > 16) {
                 tmp.push_back(lp);
-            }else{
+            } else {
             }
         }
         icebergs = tmp;
     }
 
-    void removeBoat(AntarcticBoat ab){
+    void removeBoat(AntarcticBoat ab) {
         std::vector<AntarcticBoat> tmp;
         PVector loc1 = ab.getLocation();
-        for(AntarcticBoat lp : boats){
+        for (AntarcticBoat lp : boats) {
             PVector loc2 = lp.getLocation();
-            if(dist(loc1, loc2)>16) {
+            if (dist(loc1, loc2) > 16) {
                 tmp.push_back(lp);
-            }else{
+            } else {
             }
         }
         boats = tmp;
     }
 
-    bool dead(){
-        return boat.getHealth()<=0;
+    bool dead() {
+        return boat.getHealth() <= 0;
+    }
+
+    int getPoints() {
+        return stoi(boat.getScore().getText());
     }
 };
 
@@ -109,12 +114,16 @@ public:
         ac->move(flags);
     }
 
-    bool nextLevel(){
+    bool nextLevel() {
         return ac->boats.empty();
     }
 
-    bool dead(){
+    bool dead() {
         return ac->dead();
+    }
+
+    int getPoints() {
+        ac->getPoints();
     }
 };
 

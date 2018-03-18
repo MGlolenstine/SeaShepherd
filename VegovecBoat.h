@@ -6,6 +6,7 @@
 #define IGRCA_VEGOVECBOAT_H
 
 #include <utility>
+#include <map>
 
 class VegovecBoat;
 
@@ -32,6 +33,7 @@ class VegovecBoat {
     PImage img;
     int health = 100;
     QuestionBox qb = QuestionBox("Placeholder"s, true, nullptr);
+    std::map<std::string, bool> questions;
 public:
     bool question = false;
 
@@ -42,6 +44,10 @@ public:
         mult = 1;
         this->img = std::move(img);
         health = 100;
+        questions.emplace("C/C++ is a shit programming language", true);
+        questions.emplace("             sqrt(9) = 4            ", false);
+        questions.emplace("       Is Java crossplatform?       ", true);
+        questions.emplace(" Can a man go 8 days without sleep? ", true);
     }
 
     void show() {
@@ -135,7 +141,9 @@ public:
 
     bool checkHitPirate(Pirate pi) {
         if (dist(pi.getLocation(), getLocation()) < 32) {
-            qb = QuestionBox("C/C++ is a shit programming language"s, true, this);
+            auto item = questions.begin();
+            std::advance( item, random(questions.size()));
+            qb = QuestionBox(""s+item->first, item->second, this);
             question = true;
             return true;
         }
@@ -159,9 +167,11 @@ public:
             int ans = qb.clicked(mouseX, mouseY);
             if(ans==1){
                 addRemoveHealth(PIRATE_CORRECT);
+                score+20;
                 question = false;
             }else if(ans == 0){
                 addRemoveHealth(PIRATE_WRONG);
+                score-20;
                 question = false;
             }
         }

@@ -14,6 +14,7 @@ class Button {
     PString displayText;
     int action;
     bool centered;
+    bool active = true;
 public:
     Button(){}
 
@@ -41,13 +42,17 @@ public:
     }
 
     void show() {
-        fill(255);
+        if(active) {
+            fill(255);
+        }else{
+            fill(200);
+        }
         rect(x, y, width, height);
         fill(0);
         if(centered) {
             text(displayText, x + 20, y + height / 2 + 2);
         }else{
-            text(displayText, x, y);
+            text(displayText, x, y + height / 2 + 2);
         }
     }
 
@@ -64,12 +69,18 @@ public:
     }
 
     int pressed(int x, int y) {
-        if (x > this->x && x < this->x + width) {
-            if (y > this->y && y < this->y + height) {
-                return action;
+        if(active) {
+            if (x > this->x && x < this->x + width) {
+                if (y > this->y && y < this->y + height) {
+                    return action;
+                }
             }
         }
         return -2;
+    }
+
+    int setActive(bool active){
+        this->active = active;
     }
 };
 

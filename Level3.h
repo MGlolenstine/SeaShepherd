@@ -96,6 +96,10 @@ public:
     void mousePressed(int mouseX, int mouseY){
         boat.mousePressed(mouseX, mouseY);
     }
+
+    int getPoints() {
+        return stoi(boat.getScore().getText());
+    }
 };
 
 class Level3 {
@@ -125,6 +129,10 @@ public:
 
     bool dead(){
         return cs->dead();
+    }
+
+    int getPoints() {
+        cs->getPoints();
     }
 };
 
