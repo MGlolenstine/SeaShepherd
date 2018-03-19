@@ -76,6 +76,7 @@ void draw() {
         l1.keyPressed(flag);
         if(l1.dead()){
             currentScene = 4;
+            nameInput.reset();
             won = false;
         }
         if(l1.nextLevel()){
@@ -87,6 +88,7 @@ void draw() {
         l2.keyPressed(flag);
         if(l2.dead()){
             currentScene = 4;
+            nameInput.reset();
             won = false;
         }
         if(l2.nextLevel()){
@@ -98,10 +100,12 @@ void draw() {
         l3.keyPressed(flag);
         if(l3.dead()){
             currentScene = 4;
+            nameInput.reset();
             won = false;
         }
         if(l3.nextLevel()){
             currentScene++;
+            nameInput.reset();
             points += l3.getPoints();
             l3 = Level3();
         }

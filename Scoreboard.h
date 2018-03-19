@@ -61,7 +61,7 @@ public:
             exit(1);
         }
         string x = "";
-        while (is >> x) {
+        while (getline(is, x)) {
             vector<PString> splot = PString(x).split(':');
             scores.emplace_back(splot.at(1).getText()+":"+splot.at(0).getText());
         }

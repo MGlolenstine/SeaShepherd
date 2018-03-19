@@ -29,6 +29,10 @@ public:
         sb.getResults();
     }
 
+    void reset(){
+        submit.setActive(true);
+    }
+
     void show() {
         fill(0);
         text("Score: "s+points, 0, 20);

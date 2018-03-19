@@ -388,8 +388,9 @@ public:
     PString substr(int beginIndex, int length){
         return PString(text.substr(beginIndex, length));
     }
+
     int length(){
-        return text.length();
+        return static_cast<int>(text.length());
     }
 
     std::vector<PString> split(char regex){
@@ -397,7 +398,7 @@ public:
         std::string tmp = text;
         int prevIndex = 0;
         for(int i = 0; i < tmp.length(); i++){
-            if(tmp.at(i) == regex){
+            if(tmp.at(i) != ' ' && tmp.at(i) == regex){
                 std::string news = tmp.substr(prevIndex, i-prevIndex);
                 vps.emplace_back(news);
                 prevIndex = i+1;
