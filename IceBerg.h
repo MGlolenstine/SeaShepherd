@@ -43,6 +43,12 @@ public:
         tmp.add(dir);
         pos = tmp.copy();
     }
+
+    void setLocation(PVector vector) {
+        pos.x = vector.x;
+        pos.y = vector.y;
+        pos.z = vector.z;
+    }
 };
 
 

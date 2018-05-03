@@ -33,6 +33,12 @@ public:
     PVector getLocation() {
         return pos;
     }
+
+    void setLocation(PVector pos1){
+        pos.x = pos1.x;
+        pos.y = pos1.y;
+        pos.z = pos1.z;
+    }
 };
 
 #endif //IGRCA_ATOL_H

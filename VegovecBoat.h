@@ -176,6 +176,20 @@ public:
             }
         }
     }
+
+    void setHealth(int health1){
+        health = health1;
+    }
+
+    void setLocation(PVector pos){
+        x = pos.x;
+        y = pos.y;
+        z = pos.z;
+    }
+
+    void setScore(int score1){
+        score = score1;
+    }
 };
 
 #endif //IGRCA_VEGOVECBOAT_H

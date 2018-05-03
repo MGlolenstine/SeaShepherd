@@ -17,14 +17,32 @@ public:
     explicit Antarctic(int amountOfBoats, int amountOfBergs) {
         PImage img = loadImage("boats/antarctic.png");
         for (int i = 0; i < amountOfBoats; i++) {
-            boats.push_back(AntarcticBoat(img));
+            boats.emplace_back(img);
         }
         img = loadImage("boats/iceberg.png");
         for (int i = 0; i < amountOfBergs; i++) {
-            icebergs.push_back(IceBerg(img));
+            icebergs.emplace_back(img);
         }
         img = loadImage("boats/ladja_vegovec.png");
         boat = VegovecBoat(img);
+    }
+
+    std::vector<std::string>* info(){
+        //println("There is: "s+(int)boats.size()+" boats and "+(int)icebergs.size()+" icebergs.");
+        auto *info = new std::vector<std::string>();
+        info->push_back(("health:"s+boat.getHealth()).getText());
+        info->push_back(("score:"s+boat.getScore().getText()).getText());
+        PVector pos = boat.getLocation();
+        info->push_back(("pos:"s+pos.x+","+pos.y+","+pos.z).getText());
+        for(AntarcticBoat ab : boats){
+            PVector pv = ab.getLocation();
+            info->push_back(("goal:"s+ pv.x+","+pv.y+","+pv.z).getText());
+        }
+        for(IceBerg ic : icebergs){
+            PVector pv = ic.getLocation();
+            info->push_back(("hurdle:"s+ pv.x+","+pv.y+","+pv.z).getText());
+        }
+        return info;
     }
 
     void show() {
@@ -96,6 +114,28 @@ public:
     int getPoints() {
         return stoi(boat.getScore().getText());
     }
+
+    void addPlayer(int health, int score, PVector pos){
+        PImage img = loadImage("boats/ladja_vegovec.png");
+        boat = VegovecBoat(img);
+        boat.setHealth(health);
+        boat.setLocation(pos);
+        boat.setScore(score);
+    }
+
+    void addBoat(PVector pos){
+        PImage img = loadImage("boats/antarctic.png");
+        AntarcticBoat b = AntarcticBoat(img);
+        b.setLocation(pos);
+        boats.push_back(b);
+    }
+
+    void addBerg(PVector pos){
+        PImage img = loadImage("boats/iceberg.png");
+        IceBerg b = IceBerg(img);
+        b.setLocation(pos);
+        icebergs.push_back(b);
+    }
 };
 
 class Level1 {
@@ -108,6 +148,10 @@ public:
             ac = new Antarctic(amountOfBoats, amountOfBergs);
         }
         ac->show();
+    }
+
+    void setup(){
+        ac = new Antarctic(0, 0);
     }
 
     void keyPressed(const bool flags[]) {
@@ -124,6 +168,22 @@ public:
 
     int getPoints() {
         ac->getPoints();
+    }
+
+    std::vector<std::string>* info(){
+        return ac->info();
+    }
+
+    void addPlayer(int health, int score, PVector pos){
+        ac->addPlayer(health, score, pos);
+    }
+
+    void addBerg(PVector pos){
+        ac->addBerg(pos);
+    }
+
+    void addBoat(PVector pos){
+        ac->addBoat(pos);
     }
 };
 

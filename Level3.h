@@ -100,6 +100,46 @@ public:
     int getPoints() {
         return stoi(boat.getScore().getText());
     }
+
+    void addPlayer(int health, int score, PVector pos){
+        PImage img = loadImage("boats/ladja_vegovec.png");
+        boat = VegovecBoat(img);
+        boat.setHealth(health);
+        boat.setLocation(pos);
+        boat.setScore(score);
+    }
+
+    void addBoat(PVector pos){
+        PImage img = loadImage("boats/chinasea.png");
+        ChinaSeaBoat b = ChinaSeaBoat(img);
+        b.setLocation(pos);
+        boats.push_back(b);
+    }
+
+    void addBerg(PVector pos){
+        PImage img = loadImage("boats/pirate.png");
+        Pirate b = Pirate(img);
+        b.setLocation(pos);
+        pirates.push_back(b);
+    }
+
+    std::vector<std::string>* info(){
+        //println("There is: "s+(int)boats.size()+" boats and "+(int)icebergs.size()+" icebergs.");
+        auto *info = new std::vector<std::string>();
+        info->push_back(("health:"s+boat.getHealth()).getText());
+        info->push_back(("score:"s+boat.getScore().getText()).getText());
+        PVector pos = boat.getLocation();
+        info->push_back(("pos:"s+pos.x+","+pos.y+","+pos.z).getText());
+        for(ChinaSeaBoat ab : boats){
+            PVector pv = ab.getLocation();
+            info->push_back(("goal:"s+ pv.x+","+pv.y+","+pv.z).getText());
+        }
+        for(Pirate ic : pirates){
+            PVector pv = ic.getLocation();
+            info->push_back(("hurdle:"s+ pv.x+","+pv.y+","+pv.z).getText());
+        }
+        return info;
+    }
 };
 
 class Level3 {
@@ -113,6 +153,10 @@ public:
             cs = new ChinaSea(amountOfBoats, amountOfBergs);
         }
         cs->show();
+    }
+
+    void setup(){
+        cs = new ChinaSea(0, 0);
     }
 
     void keyPressed(const bool flags[]) {
@@ -133,6 +177,22 @@ public:
 
     int getPoints() {
         cs->getPoints();
+    }
+
+    std::vector<std::string>* info(){
+        return cs->info();
+    }
+
+    void addPlayer(int health, int score, PVector pos){
+        cs->addPlayer(health, score, pos);
+    }
+
+    void addBerg(PVector pos){
+        cs->addBerg(pos);
+    }
+
+    void addBoat(PVector pos){
+        cs->addBoat(pos);
     }
 };
 

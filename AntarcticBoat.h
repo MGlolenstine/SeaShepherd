@@ -54,6 +54,12 @@ public:
         shown = distance < 300;
     }
 
+    void setLocation(PVector pos1){
+        pos.x = pos1.x;
+        pos.y = pos1.y;
+        pos.z = pos1.z;
+    }
+
     void move(PVector vb){
         dir = pos;
         dir.sub(vb);
