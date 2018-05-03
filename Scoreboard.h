@@ -47,7 +47,7 @@ public:
     }
 
     void addResult(PString name, int points) {
-        ofstream os = ofstream(path.getText(), ios::app);
+        ofstream os(path.getText(), ios::app);
         os << name.getText() << ":" << points << endl;
         os.close();
     }
@@ -58,7 +58,10 @@ public:
         is.open(path.getText());
         if (!is) {
             cerr << "Unable to open file " << path.getText() << endl;
-            exit(1);
+            cerr << "Creating file "<<path.getText()<<endl;
+            ofstream s(path.getText());
+            s.close();
+            //exit(1);
         }
         string x = "";
         while (getline(is, x)) {

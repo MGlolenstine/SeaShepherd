@@ -121,6 +121,12 @@ void mousePressed() {
         if(action == 1){
             currentScene = 1;
         }
+        if(action == 2){
+            // Continue
+        }
+        if(action == 3){
+            // Replay last gameplay
+        }
     }else if(currentScene == 0){
         int action = ls.pressed(mouseX, mouseY);
         if(action == 1){

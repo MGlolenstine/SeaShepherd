@@ -5,6 +5,7 @@
 #ifndef IGRCA_ANTARCTICBOAT_H
 #define IGRCA_ANTARCTICBOAT_H
 
+#define frames 60
 
 #include "P5c.h"
 
@@ -13,6 +14,7 @@ class AntarcticBoat {
     PVector dir;
     PImage img;
     bool shown = false;
+    int framecount = frames+5;
 public:
     AntarcticBoat(PImage img) {
         pos.x = random(0, width);
@@ -25,7 +27,8 @@ public:
         if(shown) {
             image(img, int(pos.x - 16), int(pos.y - 16), 32, 32);
         }else{
-            if(random(0, 1000) < 3){
+            if(framecount < frames){
+                framecount = 0;
                 image(img, int(pos.x - 16), int(pos.y - 16), 32, 32);
                 fill(0, 255, 0, 50);
                 stroke(0);
@@ -33,6 +36,10 @@ public:
                 ellipse(pos.x, pos.y, 75, 75);
                 ellipse(pos.x, pos.y, 50, 50);
                 ellipse(pos.x, pos.y, 25, 25);
+            }else {
+                if (random(0, 1000) < 3) {
+                    framecount = 0;
+                }
             }
         }
     }

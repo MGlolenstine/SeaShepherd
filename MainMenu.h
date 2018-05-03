@@ -13,8 +13,10 @@ class MainMenu {
 public:
 
     MainMenu() {
-        buttons.push_back(new Button(width / 2, height / 10 * 6, "Level selector"s, 0, true));
-        buttons.push_back(new Button(width / 2, height / 10 * 7, "Play"s, 1, true));
+        buttons.push_back(new Button(width / 2, height / 10 * 5, "Continue"s, 2, true));
+        buttons.push_back(new Button(width / 2, height / 10 * 6, "Play"s, 1, true));
+        buttons.push_back(new Button(width / 2, height / 10 * 7, "Level selector"s, 0, true));
+        buttons.push_back(new Button(width / 2, height / 10 * 8, "Replay last"s, 3, true));
     }
 
     void show() {
@@ -24,6 +26,12 @@ public:
     }
 
     int pressed(int x, int y) {
+        /*
+         * 0 - LevelSelector
+         * 1 - Play
+         * 2 - Continue
+         * 3 - Replay last
+         */
         for (Button *b : buttons) {
             int action = b->pressed(x, y);
             if (action != -2) {

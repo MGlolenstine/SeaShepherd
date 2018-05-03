@@ -12,6 +12,7 @@ class Atol {
     PImage img;
     float rotation = 0;
     bool shown = false;
+    long timeLived = 0;
 public:
     Atol(PImage img) {
         pos.x = random(0, width);
@@ -25,13 +26,13 @@ public:
     }
 
     void show() {
-        image(img, pos.x-16, pos.y-16, 32, 32);
+        image(img, pos.x-16, pos.y-16, 32+timeLived/30, 32+timeLived/30);
+        timeLived++;
     }
 
     PVector getLocation() {
         return pos;
     }
 };
-
 
 #endif //IGRCA_ATOL_H
