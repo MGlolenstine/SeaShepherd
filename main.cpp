@@ -5,6 +5,7 @@
 #include "Level2.h"
 #include "Level3.h"
 #include "TextInput.h"
+#include "replay.h"
 
 /*
    -1 - main menu
@@ -13,6 +14,7 @@
     2 - Level 2
     3 - Level 3
     4 - EndGame screen
+    5 - Replay scene
 */
 int currentScene = -1;
 
@@ -27,6 +29,8 @@ PImage bg[6];
 Button win;
 Button lose;
 TextInput nameInput;
+ofstream replayOut("replay.txt", ios::app);
+Replay *replay = nullptr;
 
 bool won = true;
 
@@ -47,12 +51,15 @@ void setup() {
     win = Button(width / 2, height - 25, PString("Cestitke, zmagal si"s), -1, true);
     lose = Button(width / 2, height - 25, PString("Vec srece prihodnjic"s), -1, true);
     nameInput = TextInput(width / 3, 15, width / 3, 20);
+//    replayOut = ofstream("replay.txt");
+    replay = new Replay(bg);
 }
 
 void draw() {
     background(51);
     image(bg[currentScene + 1], 0, 0, width, height);
     fill(255);
+    //println("CurrentScene: "s+currentScene);
     if (currentScene == -1) {
         mm.show();
     } else if (currentScene == 0) {
@@ -72,40 +79,65 @@ void draw() {
             lose.show();
         }
     } else if (currentScene == 5) {
-        // TODO: Replay
+        replay->show(&currentScene);
     }
     if (currentScene == 1) {
         l1.keyPressed(flag);
+        if(replayOut.is_open()) {
+            for (string s : *l1.info()) {
+                replayOut << s << endl;
+            }
+        }else{
+            println("replayOut isn't open"s);
+        }
         if (l1.dead()) {
             currentScene = 4;
             nameInput.reset();
             won = false;
         }
         if (l1.nextLevel()) {
+            replayOut<<"level:2"<<endl;
             currentScene++;
             points += l1.getPoints();
             l1 = Level1();
         }
     } else if (currentScene == 2) {
         l2.keyPressed(flag);
+        if(replayOut.is_open()) {
+            for (string s : *l2.info()) {
+                replayOut << s << endl;
+            }
+        }else{
+            println("replayOut isn't open"s);
+        }
         if (l2.dead()) {
             currentScene = 4;
             nameInput.reset();
             won = false;
         }
         if (l2.nextLevel()) {
+            replayOut<<"level:3"<<endl;
             currentScene++;
             points += l2.getPoints();
             l2 = Level2();
         }
     } else if (currentScene == 3) {
         l3.keyPressed(flag);
+        if(replayOut.is_open()) {
+            for (string s : *l3.info()) {
+                replayOut << s << endl;
+            }
+        }else{
+            println("replayOut isn't open"s);
+        }
         if (l3.dead()) {
             currentScene = 4;
             nameInput.reset();
             won = false;
         }
         if (l3.nextLevel()) {
+            //replayOut.flush();
+            //replayOut.close();
             currentScene++;
             nameInput.reset();
             points += l3.getPoints();
@@ -233,6 +265,11 @@ void mousePressed() {
             currentScene = 0;
         }
         if (action == 1) {
+            if(replayOut.is_open()) {
+                replayOut.close();
+                replayOut.open("replay.txt");
+            }
+            replayOut<<"level:1"<<endl;
             currentScene = 1;
         }
         if (action == 2) {
@@ -241,6 +278,8 @@ void mousePressed() {
         }
         if (action == 3) {
             // Replay last gameplay
+            println("replaying last gameplay"s);
+            currentScene = 5;
         }
     } else if (currentScene == 0) {
         int action = ls.pressed(mouseX, mouseY);
@@ -317,13 +356,19 @@ void keyPressed() {
 }
 
 void keyReleased() {
-    if (key == 'w') {
-        flag[0] = false;
-    } else if (key == 'a') {
-        flag[1] = false;
-    } else if (key == 's') {
-        flag[2] = false;
-    } else if (key == 'd') {
-        flag[3] = false;
+    if(currentScene != 4 && currentScene != 5) {
+        if (key == 'w') {
+            flag[0] = false;
+        } else if (key == 'a') {
+            flag[1] = false;
+        } else if (key == 's') {
+            flag[2] = false;
+        } else if (key == 'd') {
+            flag[3] = false;
+        } else if (key == 'p') {
+            replayOut.flush();
+            replayOut.close();
+            exit(0);
+        }
     }
-}
+}   

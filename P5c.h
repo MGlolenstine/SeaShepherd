@@ -927,6 +927,7 @@ bool startsWith(const char string[], const char check[]) {
         }
         return true;
     }
+    return false;
 }
 
 float noise(double x) {
