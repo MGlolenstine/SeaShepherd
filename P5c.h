@@ -19,6 +19,8 @@
 const int CLOSE = 1;
 const int P3D = 1;
 
+#define _USE_MATH_DEFINES
+
 #include <chrono>
 #include <GL/freeglut.h>
 #include <GL/freeglut_std.h>
@@ -111,7 +113,7 @@ class PString;
 
 void println(PString str);
 
-PString operator "" s(const char *text, std::size_t len);
+PString operator ""s(const char *text, unsigned int len);
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "OCDFAInspection"
@@ -415,7 +417,7 @@ private:
     }
 };
 
-PString operator "" s(const char *text, std::size_t len) {
+PString operator ""s(const char *text, unsigned int len) {
     return PString(std::string(text, len));
 }
 
